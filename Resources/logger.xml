@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="tpaylogger" class="Shopware\Components\Logger">
+            <argument>tpay</argument>
+            <call method="pushHandler">
+                <argument type="service" id="monolog.handler.rotating_file.tpay" />
+            </call>
+        </service>
+        <service id="monolog.handler.rotating_file.tpay" class="Monolog\Handler\RotatingFileHandler" public="false">
+            <argument>%kernel.logs_dir%/tpay_%kernel.environment%.log</argument>
+            <argument>14</argument>
+            <call method="pushProcessor">
+                <argument type="service" id="monolog.processor.uid" />
+            </call>
+        </service>
+    </services>
+</container>

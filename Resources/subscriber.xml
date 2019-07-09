@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container
+        xmlns="http://symfony.com/schema/dic/services"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service
+                class="TpayShopwarePayments\Subscriber\Frontend\Checkout"
+                id="tpay_shopware_payments.subscriber.frontend.checkout">
+            <argument type="string">%tpay_shopware_payments.template_dir%</argument>
+            <argument type="service" id="tpay_shopware_payments.service.payment_finder_service"/>
+            <argument type="service" id="tpay_shopware_payments.tpay_config_service"/>
+            <argument type="service" id="snippets"/>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+
+        <service class="TpayShopwarePayments\Subscriber\Frontend\Assets" id="tpay_shopware_payments.subscriber.frontend.assets">
+            <argument type="string">%tpay_shopware_payments.template_dir%</argument>
+            <tag name="shopware.event_subscriber"/>
+        </service>
+
+    </services>
+</container>

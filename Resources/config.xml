@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/config.xsd">
+    <elements>
+        <element required="true" type="text" scope="shop">
+            <name>tpay_merchant_id</name>
+            <label lang="de">Händler ID</label>
+            <label lang="en">Merchant ID</label>
+            <label lang="pl">Identyfikator sprzedawcy</label>
+            <value/>
+        </element>
+
+        <element required="true" type="password" scope="shop">
+            <name>tpay_merchant_secret</name>
+            <label lang="de">Händler Passwort</label>
+            <label lang="en">Merchant secret</label>
+            <label lang="pl">Kod bezpieczeństwa</label>
+            <value/>
+        </element>
+
+        <element required="true" type="text" scope="shop">
+            <name>tpay_merchant_tr_api_key</name>
+            <label lang="de">Transaktion API Schlüssel</label>
+            <label lang="en">Transaction API key</label>
+            <label lang="pl">Klucz API Transakcji</label>
+            <value/>
+        </element>
+
+        <element required="true" type="password" scope="shop">
+            <name>tpay_merchant_tr_api_pass</name>
+            <label lang="de">Transaktion API key passwort</label>
+            <label lang="en">Transaction API key password</label>
+            <label lang="pl">Hasło klucza API Transakcji</label>
+            <value/>
+        </element>
+    </elements>
+</config>

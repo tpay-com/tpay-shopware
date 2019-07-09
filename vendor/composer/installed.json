@@ -1,0 +1,112 @@
+[
+    {
+        "name": "tpay-com/tpay-php",
+        "version": "2.1.2",
+        "version_normalized": "2.1.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tpay-com/tpay-php.git",
+            "reference": "6dbc847d2f3a73c240957ee84272f83e5e355966"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tpay-com/tpay-php/zipball/6dbc847d2f3a73c240957ee84272f83e5e355966",
+            "reference": "6dbc847d2f3a73c240957ee84272f83e5e355966",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.6.0"
+        },
+        "time": "2019-04-10T09:50:59+00:00",
+        "type": "library",
+        "extra": [
+            {
+                "engine": "PHP SDK"
+            }
+        ],
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "tpayLibs/src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "tpay.com",
+                "homepage": "https://tpay.com"
+            }
+        ],
+        "description": "tpay.com library"
+    },
+    {
+        "name": "whitecube/lingua",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/whitecube/lingua.git",
+            "reference": "9c8aabef13161fed3456b076f84aca9d8f125796"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/whitecube/lingua/zipball/9c8aabef13161fed3456b076f84aca9d8f125796",
+            "reference": "9c8aabef13161fed3456b076f84aca9d8f125796",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": "^7.0"
+        },
+        "require-dev": {
+            "codeclimate/php-test-reporter": "dev-master",
+            "phpunit/phpunit": "^6.1"
+        },
+        "time": "2018-11-08T12:53:15+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "WhiteCube\\Lingua\\": "src/Lingua/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "WhiteCube",
+                "email": "hello@whitecube.be",
+                "homepage": "http://www.whitecube.be",
+                "role": "Maintainer"
+            },
+            {
+                "name": "Toon Van den Bos",
+                "email": "toon@whitecube.be",
+                "role": "Developer"
+            },
+            {
+                "name": "Adrien Leloup",
+                "email": "adrien@whitecube.be",
+                "role": "Developer"
+            }
+        ],
+        "description": "A PHP-7 language codes converter, from and to the most common formats (ISO, W3C, PHP and human-readable names).",
+        "keywords": [
+            "BCP-47",
+            "codes",
+            "conversion",
+            "iso",
+            "language",
+            "locales",
+            "localization",
+            "translate",
+            "translation"
+        ]
+    }
+]
