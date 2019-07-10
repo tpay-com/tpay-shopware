@@ -14,13 +14,13 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
      */
     protected $transactionNotification;
 
+    /** @var \Psr\Log\LoggerInterface */
+    protected $logger;
+
     /**
      * @var ModelManager
      */
     private $modelManager;
-
-    /** @var \Psr\Log\LoggerInterface */
-    protected $logger;
 
     /**
      * {@inheritdoc}
@@ -54,10 +54,11 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
             ->getRepository(Order::class)
             ->findOneBy([
                 'transactionID' => $notification['tr_id'],
-                'temporaryID' => base64_decode($notification['tr_crc']),
+                'temporaryID' => $notification['tr_crc'],
             ]);
         if ($orderRepository === null) {
-            $this->logger->error(sprintf('Could not find associated order with the temporaryID %s', $notification['tr_crc']));
+            $this->logger->error(sprintf('Could not find associated order with the temporaryID %s',
+                $notification['tr_crc']));
             throw new TException(
                 sprintf('Could not find associated order with the temporaryID %s', $notification['tr_crc'])
             );
@@ -69,10 +70,9 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
             ->getRepository(Status::class)
             ->find($status);
         $orderRepository->setPaymentStatus($orderStatusModel);
-        $orderRepository->setTransactionId($notification['tr_id']);
-        try{
+        try {
             $this->modelManager->flush($orderRepository);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->logger->error(sprintf('Transaction notify error: %s', $e->getMessage()));
         }
         // Disable Shopware Smarty renderer.

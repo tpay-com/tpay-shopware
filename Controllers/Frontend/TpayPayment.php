@@ -30,6 +30,11 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
     /** @var Shopware\Components\Routing\Router */
     protected $router;
 
+    /**
+     * @var null|int
+     */
+    private $currentOrderId;
+
     public function getWhitelistedCSRFActions()
     {
         return [
@@ -113,12 +118,10 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
      */
     public function basicAction()
     {
-        $user = $this->getUser();
-        $billing = $user['billingaddress'];
-        $crc = $this->createPaymentUniqueId();
-        $transactionConfig = $this->getTransactionConfig($crc, $billing, $user);
+        $transactionConfig = $this->getTransactionConfig();
         try {
             $tpayTransaction = $this->tpayApi->create($transactionConfig);
+            $this->updateOrderTransactionTitle($tpayTransaction['title']);
         } catch (TException $TException) {
             $this->logger->error('TException '.$TException->getMessage());
 
@@ -128,7 +131,6 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
 
             return $this->redirect(['controller' => 'checkout']);
         }
-        $this->insertOrder($tpayTransaction['title'], $crc);
 
         return $this->redirect($tpayTransaction['url']);
     }
@@ -139,16 +141,16 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
      * @throws Exception
      */
     public function blikAction()
-    {
+    {ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
         $userPaymentService = $this->container->get('tpay_shopware_payments.service.user_payment_method_service');
         $blikCode = $userPaymentService->getUserBlikCode();
-        $user = $this->getUser();
-        $billing = $user['billingaddress'];
-        $crc = $this->createPaymentUniqueId();
-        $transactionConfig = $this->getTransactionConfig($crc, $billing, $user);
+        $transactionConfig = $this->getTransactionConfig();
         $transactionConfig['group'] = 150;
         try {
             $tpayTransaction = $this->tpayApi->create($transactionConfig);
+            $this->updateOrderTransactionTitle($tpayTransaction['title']);
         } catch (TException $TException) {
             $this->logger->error('TException '.$TException->getMessage());
 
@@ -158,7 +160,6 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
 
             return $this->redirect(['controller' => 'checkout']);
         }
-        $this->insertOrder($tpayTransaction['title'], $crc);
         try {
             $apiResult = $this->tpayApi->blik($tpayTransaction['title'], $blikCode);
             if (isset($apiResult['result']) && $apiResult['result'] === 1) {
@@ -172,13 +173,30 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
     }
 
     /**
-     * @param string $crc
-     * @param array $billing
-     * @param array $user
+     * @param string $transactionTitle
+     */
+    private function updateOrderTransactionTitle($transactionTitle)
+    {
+        $sql = '
+            UPDATE s_order
+            SET transactionID = ?
+            WHERE ordernumber = ?
+        ';
+        Shopware()->Db()->executeQuery($sql, [
+            $transactionTitle,
+            $this->currentOrderId,
+        ]);
+    }
+
+    /**
      * @return array
      */
-    private function getTransactionConfig($crc, $billing, $user)
+    private function getTransactionConfig()
     {
+        $user = $this->getUser();
+        $billing = $user['billingaddress'];
+        $crc = $this->createPaymentUniqueId();
+        $this->insertOrder($crc, $crc);
         $userPaymentService = $this->container->get('tpay_shopware_payments.service.user_payment_method_service');
         $userPaymentID = $userPaymentService->getUserGroupId();
         $parameter = [
@@ -191,7 +209,7 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
             'return_url' => $this->getReturnUrl(),
             'return_error_url' => $this->getReturnUrl(),
             'result_url' => $this->getNotificationUrl(),
-            'description' => 'Zamówienie nr '.$this->getOrderNumber(),
+            'description' => 'Zamówienie nr '.$this->currentOrderId,
             'email' => $user['additional']['user']['email'],
             'language' => 'PL',
             'module' => 'Shopware',
@@ -219,7 +237,7 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
      */
     private function insertOrder($tpayTransactionId, $paymentUniqueId)
     {
-        $this->saveOrder(
+        $this->currentOrderId = $this->saveOrder(
             $tpayTransactionId,
             $paymentUniqueId,
             static::PAYMENT_STATUS_OPEN

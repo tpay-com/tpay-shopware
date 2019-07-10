@@ -31,19 +31,35 @@ class TpayShopwarePayments extends Plugin
     {
         /** @var \Shopware\Components\Plugin\PaymentInstaller $installer */
         $installer = $this->container->get('shopware.plugin_payment_installer');
-        $options = [
-            'name' => 'tpay_shopware_payments',
-            'description' => 'Tpay.com fast online payments',
-            'action' => 'TpayPayment',
-            'active' => 0,
-            'position' => 0,
-            'additionalDescription' =>
-                '<img src="https://tpay.com/img/banners/tpay-160x75.svg"/>'
-                .'<div id="payment_desc">'
-                .'Pay save and secure by online bank transfers or international payment methods via Tpay.com system.'
-                .'</div>',
+        $paymentMethods = [
+            [
+                'name' => static::PAYMENT_SHORT_NAME,
+                'description' => 'Tpay.com fast online payments',
+                'action' => 'TpayPayment',
+                'active' => 0,
+                'position' => 0,
+                'additionalDescription' =>
+                    '<img src="https://tpay.com/img/banners/tpay-160x75.svg"/>'.
+                    '<div id="payment_desc">'.
+                    'Pay save and secure by online bank transfers or international payment methods via Tpay.com system.'.
+                    '</div>',
+            ],
+            [
+                'name' => static::BLIK_PAYMENT_SHORT_NAME,
+                'description' => 'Fast BLIK payment by Tpay.com',
+                'action' => 'TpayPayment',
+                'active' => 0,
+                'position' => 0,
+                'additionalDescription' =>
+                    '<img src="https://secure.tpay.com/_/banks/b64.png"/>'.
+                    '<div id="payment_desc">'.
+                    'Pay by BLIK method via secure Tpay.com online payments system'.
+                    '</div>',
+            ],
         ];
-        $installer->createOrUpdate($context->getPlugin(), $options);
+        foreach ($paymentMethods as $paymentMethodDetails) {
+            $installer->createOrUpdate($context->getPlugin(), $paymentMethodDetails);
+        }
         $this->installSchema();
         $context->scheduleClearCache($context::CACHE_LIST_ALL);
     }
