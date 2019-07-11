@@ -33,5 +33,13 @@
             <label lang="pl">Hasło klucza API Transakcji</label>
             <value/>
         </element>
+
+        <element type="boolean" required="false" scope="shop">
+            <name>tpay_send_status_change_email</name>
+            <label lang="de">Senden Sie eine E-Mail nach der Änderung des Bestellstatus</label>
+            <label lang="en">Send an email after order status change</label>
+            <label lang="pl">Wyślij wiadomość o zmianie statusu zamówienia</label>
+            <value>true</value>
+        </element>
     </elements>
 </config>

@@ -141,9 +141,7 @@ class Shopware_Controllers_Frontend_TpayPayment extends Shopware_Controllers_Fro
      * @throws Exception
      */
     public function blikAction()
-    {ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+    {
         $userPaymentService = $this->container->get('tpay_shopware_payments.service.user_payment_method_service');
         $blikCode = $userPaymentService->getUserBlikCode();
         $transactionConfig = $this->getTransactionConfig();

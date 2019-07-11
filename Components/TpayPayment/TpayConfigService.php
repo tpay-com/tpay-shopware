@@ -76,4 +76,14 @@ class TpayConfigService implements TpayConfigInterface
         return $this->config['tpay_merchant_tr_api_pass'];
     }
 
+    /**
+     * Send order status change email setting
+     *
+     * @return bool
+     */
+    public function getSendStatusChangeEmail()
+    {
+        return $this->config['tpay_send_status_change_email'];
+    }
+
 }

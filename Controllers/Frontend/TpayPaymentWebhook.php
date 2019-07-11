@@ -9,6 +9,8 @@ use Shopware\Components\CSRFWhitelistAware;
 
 class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
+    const PLUGIN_NAME = 'TpayShopwarePayments';
+
     /**
      * @var TpayBasicNotificationHandler
      */
@@ -21,6 +23,11 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
      * @var ModelManager
      */
     private $modelManager;
+
+    /**
+     * @var array
+     */
+    private $pluginConfig;
 
     /**
      * {@inheritdoc}
@@ -40,6 +47,9 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
         $this->modelManager = $this->container->get('models');
         $this->transactionNotification = $this->container->get('tpay_shopware_payments.transaction_notification');
         $this->logger = $this->container->get('tpaylogger');
+        $this->pluginConfig = $this->container
+            ->get('shopware.plugin.cached_config_reader')
+            ->getByPluginName(static::PLUGIN_NAME);
     }
 
     /**
@@ -53,23 +63,23 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
         $orderRepository = $this->modelManager
             ->getRepository(Order::class)
             ->findOneBy([
-                'transactionID' => $notification['tr_id'],
-                'temporaryID' => $notification['tr_crc'],
+                'transactionId' => $notification['tr_id'],
+                'temporaryId' => $notification['tr_crc'],
             ]);
         if ($orderRepository === null) {
-            $this->logger->error(sprintf('Could not find associated order with the temporaryID %s',
+            $this->logger->error(sprintf('Could not find associated order with the temporaryId %s',
                 $notification['tr_crc']));
             throw new TException(
-                sprintf('Could not find associated order with the temporaryID %s', $notification['tr_crc'])
+                sprintf('Could not find associated order with the temporaryId %s', $notification['tr_crc'])
             );
         }
         $orderTotal = $orderRepository->getInvoiceAmount();
-        $status = $this->getPaymentStatus($notification, $orderTotal);
+        $statusId = $this->getPaymentStatusId($notification, $orderTotal);
         /** @var Status $orderStatusModel */
-        $orderStatusModel = $this->modelManager
-            ->getRepository(Status::class)
-            ->find($status);
-        $orderRepository->setPaymentStatus($orderStatusModel);
+        $comment = isset($notification['test_mode']) ? 'TEST MODE PAYMENT' : null;
+        $sendStatusMail = $this->pluginConfig['tpay_send_status_change_email'];
+        $order = Shopware()->Modules()->Order();
+        $order->setPaymentStatus($orderRepository->getId(), $statusId, $sendStatusMail, $comment);
         try {
             $this->modelManager->flush($orderRepository);
         } catch (\Exception $e) {
@@ -84,7 +94,7 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
      * @param float $orderTotal
      * @return int
      */
-    private function getPaymentStatus($notification, $orderTotal)
+    private function getPaymentStatusId($notification, $orderTotal)
     {
         if ($notification['tr_status'] === 'CHARGEBACK') {
             $status = Status::PAYMENT_STATE_RE_CREDITING;
