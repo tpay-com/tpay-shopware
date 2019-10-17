@@ -4,25 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae
+class ComposerStaticInitd839903605f0ade2e0d6cce1b6f3f2ad
 {
-    public static $prefixLengthsPsr4 = array (
-        'W' => 
-        array (
-            'WhiteCube\\Lingua\\' => 17,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'WhiteCube\\Lingua\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/whitecube/lingua/src/Lingua',
-        ),
-    );
-
     public static $classMap = array (
         'tpayLibs\\src\\Dictionaries\\CardDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/CardDictionary.php',
-        'tpayLibs\\src\\Dictionaries\\ErrorCodes\\SzkwalErrors' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/ErrorCodes/SzkwalErrors.php',
         'tpayLibs\\src\\Dictionaries\\ErrorCodes\\TransactionApiErrors' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/ErrorCodes/TransactionApiErrors.php',
         'tpayLibs\\src\\Dictionaries\\FieldValueFilters' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/FieldValueFilters.php',
         'tpayLibs\\src\\Dictionaries\\FieldsConfigDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/FieldsConfigDictionary.php',
@@ -36,8 +21,6 @@ class ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae
         'tpayLibs\\src\\Dictionaries\\Payments\\BlikFieldsDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/Payments/BlikFieldsDictionary.php',
         'tpayLibs\\src\\Dictionaries\\Payments\\CardDeregisterFieldsDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/Payments/CardDeregisterFieldsDictionary.php',
         'tpayLibs\\src\\Dictionaries\\Payments\\CardFieldsDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/Payments/CardFieldsDictionary.php',
-        'tpayLibs\\src\\Dictionaries\\Payments\\SzkwalFieldsDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/Payments/SzkwalFieldsDictionary.php',
-        'tpayLibs\\src\\Dictionaries\\Payments\\WhiteLabelFieldsDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/Payments/WhiteLabelFieldsDictionary.php',
         'tpayLibs\\src\\Translations\\English' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Translations/English.php',
         'tpayLibs\\src\\Translations\\Keys' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Translations/Keys.php',
         'tpayLibs\\src\\Translations\\Polish' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Translations/Polish.php',
@@ -48,21 +31,16 @@ class ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae
         'tpayLibs\\src\\_class_tpay\\Notifications\\BasicNotificationHandler' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Notifications/BasicNotificationHandler.php',
         'tpayLibs\\src\\_class_tpay\\Notifications\\BlikAliasNotificationHandler' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Notifications/BlikAliasNotificationHandler.php',
         'tpayLibs\\src\\_class_tpay\\Notifications\\CardNotificationHandler' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Notifications/CardNotificationHandler.php',
-        'tpayLibs\\src\\_class_tpay\\Notifications\\SzkwalNotificationsHandler' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Notifications/SzkwalNotificationsHandler.php',
         'tpayLibs\\src\\_class_tpay\\PaymentBlik' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentBlik.php',
         'tpayLibs\\src\\_class_tpay\\PaymentCard' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentCard.php',
-        'tpayLibs\\src\\_class_tpay\\PaymentDac' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentDac.php',
         'tpayLibs\\src\\_class_tpay\\PaymentForms\\PaymentBasicForms' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentForms/PaymentBasicForms.php',
         'tpayLibs\\src\\_class_tpay\\PaymentForms\\PaymentCardForms' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentForms/PaymentCardForms.php',
         'tpayLibs\\src\\_class_tpay\\PaymentOptions\\BasicPaymentOptions' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentOptions/BasicPaymentOptions.php',
         'tpayLibs\\src\\_class_tpay\\PaymentOptions\\CardOptions' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentOptions/CardOptions.php',
         'tpayLibs\\src\\_class_tpay\\PaymentSMS' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentSms.php',
-        'tpayLibs\\src\\_class_tpay\\PaymentSzkwal' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentSzkwal.php',
-        'tpayLibs\\src\\_class_tpay\\PaymentWhiteLabel' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/PaymentWhiteLabel.php',
         'tpayLibs\\src\\_class_tpay\\Refunds\\BasicRefunds' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Refunds/BasicRefunds.php',
         'tpayLibs\\src\\_class_tpay\\Refunds\\CardRefunds' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Refunds/CardRefunds.php',
         'tpayLibs\\src\\_class_tpay\\Reports\\BasicReports' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Reports/BasicReports.php',
-        'tpayLibs\\src\\_class_tpay\\Reports\\SzkwalReports' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Reports/SzkwalReports.php',
         'tpayLibs\\src\\_class_tpay\\TransactionApi' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/TransactionApi.php',
         'tpayLibs\\src\\_class_tpay\\Utilities\\Lang' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Utilities/Lang.php',
         'tpayLibs\\src\\_class_tpay\\Utilities\\ObjectsHelper' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Utilities/ObjectsHelper.php',
@@ -78,10 +56,8 @@ class ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae
         'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeBlikAlias' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeBlikAlias.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeCard' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeCard.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeCardDeregister' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeCardDeregister.php',
-        'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeSzkwal' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeSzkwal.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeT6Register' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeT6Register.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeT6Standard' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeT6Standard.php',
-        'tpayLibs\\src\\_class_tpay\\Validators\\PaymentTypes\\PaymentTypeWhiteLabel' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/PaymentTypes/PaymentTypeWhiteLabel.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\ResponseFieldsValidator' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/ResponseFieldsValidator.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\VariableTypesInterface' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/VariableTypesInterface.php',
         'tpayLibs\\src\\_class_tpay\\Validators\\VariableTypes\\ArrayType' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/_class_tpay/Validators/VariableTypes/ArrayType.php',
@@ -98,9 +74,7 @@ class ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit98f50c2c6b633d0fe37dd3dca020ffae::$classMap;
+            $loader->classMap = ComposerStaticInitd839903605f0ade2e0d6cce1b6f3f2ad::$classMap;
 
         }, null, ClassLoader::class);
     }

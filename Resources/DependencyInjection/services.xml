@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+<services>
+    <service class="TpayShopwarePayments\Service\PaymentRecognition" id="tpay_shopware_payments.service.payment_recognition">
+        <argument id="dbal_connection" type="service"/>
+    </service>
+
+
+    <service class="TpayShopwarePayments\Service\BankList" id="tpay_shopware_payments.service.bank_list">
+        <argument id="cache" type="service"/>
+        <argument id="tpaylogger" type="service"/>
+        <argument id="tpay_shopware_payments.components.tpay_payment.config" type="service"/>
+    </service>
+
+    <service class="TpayShopwarePayments\Service\BankSelection" id="tpay_shopware_payments.service.bank_selection">
+        <argument id="session" type="service"/>
+        <argument id="shopware_attribute.data_persister" type="service"/>
+        <argument id="shopware_attribute.data_loader" type="service"/>
+        <argument id="tpay_shopware_payments.service.bank_list" type="service"/>
+        <argument id="tpaylogger" type="service"/>
+    </service>
+
+
+</services>
+</container>

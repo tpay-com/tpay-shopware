@@ -19,11 +19,16 @@ class Util
 
     static $lang = 'en';
 
-    static $libraryPath = null;
+    static $libraryPath;
 
     static $loggingEnabled = true;
 
     static $customLogPatch;
+
+    /**
+     * Override to set your own templates directory. You can modify the library templates copied to your custom path
+     */
+    static $customTemplateDirectory;
 
     /**
      * Parse template file
@@ -38,7 +43,11 @@ class Util
         } else {
             $data['static_files_url'] =  static::$libraryPath;
         }
-        $templateDirectory = dirname(__FILE__) . '/../../View/Templates/';
+        if (is_null(static::$customTemplateDirectory)) {
+            $templateDirectory = dirname(__FILE__) . '/../../View/Templates/';
+        } else {
+            $templateDirectory =  static::$customTemplateDirectory;
+        }
         $buffer = false;
 
         if (ob_get_length() > 0) {
@@ -71,6 +80,7 @@ class Util
      */
     public static function log($title, $text)
     {
+
         $text = (string)$text;
         $logFilePath = self::getLogPath();
         $ip = (isset($_SERVER[static::REMOTE_ADDR])) ? $_SERVER[static::REMOTE_ADDR] : '';
@@ -83,6 +93,9 @@ class Util
         $logText .= PHP_EOL;
         $logText .= $text;
         $logText .= PHP_EOL . PHP_EOL;
+
+
+        Shopware()->Container()->get('tpaylogger')->info($logText);
 
         if (static::$loggingEnabled === true) {
             file_put_contents($logFilePath, $logText, FILE_APPEND);
@@ -97,6 +110,7 @@ class Util
     public static function logLine($text)
     {
         $text = (string)$text;
+        Shopware()->Container()->get('tpaylogger')->info($text);
         $logFilePath = self::getLogPath();
         if (static::$loggingEnabled === true) {
             file_put_contents($logFilePath, PHP_EOL.$text, FILE_APPEND);

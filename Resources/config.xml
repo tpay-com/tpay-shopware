@@ -7,7 +7,6 @@
             <label lang="de">Händler ID</label>
             <label lang="en">Merchant ID</label>
             <label lang="pl">Identyfikator sprzedawcy</label>
-            <value/>
         </element>
 
         <element required="true" type="password" scope="shop">
@@ -15,7 +14,7 @@
             <label lang="de">Händler Passwort</label>
             <label lang="en">Merchant secret</label>
             <label lang="pl">Kod bezpieczeństwa</label>
-            <value/>
+            <value>c923457cj2390xx</value>
         </element>
 
         <element required="true" type="text" scope="shop">
@@ -23,15 +22,12 @@
             <label lang="de">Transaktion API Schlüssel</label>
             <label lang="en">Transaction API key</label>
             <label lang="pl">Klucz API Transakcji</label>
-            <value/>
         </element>
 
         <element required="true" type="password" scope="shop">
             <name>tpay_merchant_tr_api_pass</name>
             <label lang="de">Transaktion API key passwort</label>
             <label lang="en">Transaction API key password</label>
-            <label lang="pl">Hasło klucza API Transakcji</label>
-            <value/>
         </element>
 
         <element type="boolean" required="false" scope="shop">
@@ -40,6 +36,31 @@
             <label lang="en">Send an email after order status change</label>
             <label lang="pl">Wyślij wiadomość o zmianie statusu zamówienia</label>
             <value>true</value>
+        </element>
+
+        <element type="select" required="false" scope="shop">
+            <name>tpay_channels</name>
+            <label lang="de">Senden Sie eine E-Mail nach der Änderung des Bestellstatus</label>
+            <label lang="en">Send an email after order status change</label>
+            <label lang="pl">Wyślij wiadomość o zmianie statusu zamówienia</label>
+            <store>
+                <option>
+                    <value>1</value>
+                    <label lang="de">Nur online</label>
+                    <label lang="en">Online Only</label>
+                    <label lang="pl">Tylko Online</label>
+                </option>
+                <option>
+                    <value>0</value>
+                    <label lang="de">Alle</label>
+                    <label lang="en">All</label>
+                    <label lang="pl">Wszystkie</label>
+                </option>
+            </store>
+            <value>1</value>
+            <description lang="en">Show all available payment channel groups or download groups of payment channels available only online - for payment channels from these groups, booking is done within a short time</description>
+            <description lang="de">Alle verfügbaren Zahlungskanalgruppen anzeigen oder Gruppen von Zahlungskanälen herunterladen, die nur online verfügbar sind - für Zahlungskanäle dieser Gruppen erfolgt die Buchung innerhalb kurzer Zeit</description>
+            <description lang="pl">Pokaż wszystkie dostępne kanały płatności lub pokaż kanały płatności dostępne tylko online - w przypadku kanałów płatności online rezerwacja jest dokonywana bardzo szybko</description>
         </element>
     </elements>
 </config>
