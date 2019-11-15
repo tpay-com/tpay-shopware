@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd839903605f0ade2e0d6cce1b6f3f2ad
+class ComposerStaticInit39b846687ba6e3fc5ce62e17a36d03dd
 {
     public static $classMap = array (
         'tpayLibs\\src\\Dictionaries\\CardDictionary' => __DIR__ . '/..' . '/tpay-com/tpay-php/tpayLibs/src/Dictionaries/CardDictionary.php',
@@ -74,7 +74,7 @@ class ComposerStaticInitd839903605f0ade2e0d6cce1b6f3f2ad
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitd839903605f0ade2e0d6cce1b6f3f2ad::$classMap;
+            $loader->classMap = ComposerStaticInit39b846687ba6e3fc5ce62e17a36d03dd::$classMap;
 
         }, null, ClassLoader::class);
     }

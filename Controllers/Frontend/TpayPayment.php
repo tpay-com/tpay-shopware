@@ -28,10 +28,14 @@ class Shopware_Controllers_Frontend_TpayPayment extends TpayPaymentController
     /** @var BankSelection */
     protected $bankSelection;
 
+    /** @var \TpayShopwarePayments\Components\TpayPayment\TpayConfig */
+    protected $config;
+
     public function preDispatch()
     {
         $this->tpayApi = $this->container->get('tpay_shopware_payments.basic_api');
         $this->bankSelection = $this->container->get('tpay_shopware_payments.service.bank_selection');
+        $this->config = $this->container->get('tpay_shopware_payments.components.tpay_payment.config');
         parent::preDispatch();
     }
 
@@ -48,8 +52,6 @@ class Shopware_Controllers_Frontend_TpayPayment extends TpayPaymentController
             $transactionConfig['group'] = $bank;
         }
 
-        $this->logger->info('Selected Bank:' . $bank);
-
         $transactionConfig['accept_tos'] = 1;
         $tpayTransaction = $this->createTransaction($transactionConfig);
 
@@ -63,7 +65,9 @@ class Shopware_Controllers_Frontend_TpayPayment extends TpayPaymentController
 
         $this->updateTransactionID($tpayTransaction['title']);
 
-        $this->redirect($tpayTransaction['url']);
+        $url = $this->handleUrl($tpayTransaction['url']);
+
+        $this->redirect($url);
     }
 
     /**
@@ -96,5 +100,19 @@ class Shopware_Controllers_Frontend_TpayPayment extends TpayPaymentController
         }
 
         $this->bankSelection->saveInOrderDetails($id);
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return string
+     */
+    private function handleUrl(string $url): string
+    {
+        if ($this->config->isDirectRedirect()) {
+            $url = str_replace('?gtitle=', '?title=', $url);
+        }
+
+        return $url;
     }
 }

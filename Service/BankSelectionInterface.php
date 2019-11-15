@@ -46,5 +46,5 @@ interface BankSelectionInterface
      *
      * @return bool
      */
-    public function saveInOrderDetails(int $orderID): void;
+    public function saveInOrderDetails(int $orderID);
 }

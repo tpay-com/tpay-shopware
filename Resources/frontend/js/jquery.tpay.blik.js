@@ -126,6 +126,8 @@
                 me.$button.removeAttr("disabled");
                 me.$button.find('.js--loading').remove();
             }, 150);
+
+            $.publish('plugin/tPayBlik/onEnableBuyButton', [me]);
         },
 
         validate: function () {

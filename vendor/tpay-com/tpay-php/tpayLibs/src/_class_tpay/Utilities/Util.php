@@ -80,7 +80,6 @@ class Util
      */
     public static function log($title, $text)
     {
-
         $text = (string)$text;
         $logFilePath = self::getLogPath();
         $ip = (isset($_SERVER[static::REMOTE_ADDR])) ? $_SERVER[static::REMOTE_ADDR] : '';
@@ -93,9 +92,6 @@ class Util
         $logText .= PHP_EOL;
         $logText .= $text;
         $logText .= PHP_EOL . PHP_EOL;
-
-
-        Shopware()->Container()->get('tpaylogger')->info($logText);
 
         if (static::$loggingEnabled === true) {
             file_put_contents($logFilePath, $logText, FILE_APPEND);
@@ -110,7 +106,6 @@ class Util
     public static function logLine($text)
     {
         $text = (string)$text;
-        Shopware()->Container()->get('tpaylogger')->info($text);
         $logFilePath = self::getLogPath();
         if (static::$loggingEnabled === true) {
             file_put_contents($logFilePath, PHP_EOL.$text, FILE_APPEND);

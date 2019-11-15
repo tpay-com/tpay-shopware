@@ -4,7 +4,8 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   align-content: flex-end;
-  &__text{
+
+  &__text {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -13,38 +14,54 @@
     align-content: center;
     align-items: center;
     .unitize(margin-bottom, 10);
-    &-label{
+
+    &-label {
       color: #5F7285;
       .unitize(font-size, 14);
       .unitize(line-height, 23);
       font-weight: bold;
     }
-    &-img{
+
+    &-img {
       .unitize-max-width(55);
       height: auto;
     }
   }
-  &__input{
+
+  &__input {
     .unitize(margin-bottom, 15);
   }
-  &__button{
+
+  &__button {
 
   }
 }
 
-
-input[type="text"].blik__input {
-  width: 100%;
+.blik {
+  input[type="text"] {
+    width: 100%;
+  }
 }
 
 @media screen and(min-width: @tabletViewportWidth) {
   .blik {
-    &__text{
+    &__text {
       .unitize-width(372);
     }
   }
+
   input[type="text"].blik__input {
     .unitize-width(372);
+  }
+
+  .confirm--content {
+    .main--actions {
+      .btn {
+        &.blik__button {
+          width: auto;
+        }
+      }
+    }
   }
 
 }

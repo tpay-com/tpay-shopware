@@ -16,6 +16,7 @@
 namespace TpayShopwarePayments\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
+use Shopware_Components_Snippet_Manager as Snippets;
 
 /**
  * Class Frontend
@@ -28,16 +29,26 @@ class Frontend implements SubscriberInterface
     /** @var string */
     protected $viewDir;
 
+    /** @var Snippets */
+    protected $snippets;
+
+    /** @var string */
+    protected $snippetsDir;
+
     /**
      * Frontend constructor.
      *
      * @param \Enlight_Template_Manager $template
+     * @param Snippets                  $snippets
      * @param string                    $viewDir
+     * @param string                    $snippetsDir
      */
-    public function __construct(\Enlight_Template_Manager $template, string $viewDir)
+    public function __construct(\Enlight_Template_Manager $template, Snippets $snippets, string $viewDir, string $snippetsDir)
     {
         $this->template = $template;
         $this->viewDir = $viewDir;
+        $this->snippets = $snippets;
+        $this->snippetsDir = $snippetsDir;
     }
 
     /**
@@ -57,6 +68,7 @@ class Frontend implements SubscriberInterface
      */
     public function onFrontendPostDispatch()
     {
+        $this->snippets->addConfigDir($this->snippetsDir);
         $this->template->addTemplateDir($this->viewDir);
     }
 }

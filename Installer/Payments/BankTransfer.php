@@ -28,9 +28,9 @@ class BankTransfer extends Payment
         $this->active = 0;
         $this->position = 2;
         $this->template = 'tpay_bank_transfer.tpl';
-        $this->additionalDescription = '<img class="tpay__payment__icon" src="' . $this->getIconPath('bank') . '"/>'
+        $this->additionalDescription = '<img class="tpay__payment__icon" src="https://tpay.com/img/banners/tpay-160x75.svg"/>'
             . '<div class="tpay__payment__description">'
-            . '  Szybki przelew'
+            . '  Bank transfer'
             . '</div>';
     }
 }

@@ -29,15 +29,14 @@
                 bankData = {};
 
             me.$inputs.removeClass('tpay__list-item--active');
-
+            me.$inputs.addClass('tpay__list-item--busy');
+            currentTarget.addClass('tpay__list-item--active');
 
             bankData = {
                 id: currentTarget.data('bank-id'),
                 name: currentTarget.data('bank-name'),
                 img: currentTarget.data('bank-img')
             };
-
-            currentTarget.addClass('tpay__list-item--busy');
 
             $.ajax({
                 type: "POST",
@@ -48,6 +47,13 @@
                     if(data.success){
                         currentTarget.addClass('tpay__list-item--active');
                         me.changeButtonState();
+                        var tPayInput = $('#' + currentTarget.data('payment-selector'));
+
+                        if(!tPayInput.is(':checked')) {
+                            tPayInput.click();
+                        } else {
+                            dispatchScroll();
+                        }
                     }
                 },
                 dataType: 'json'
@@ -56,14 +62,14 @@
 
         changeButtonState: function () {
             var me = this,
+                tPayBankListActive = me.$el.hasClass('tpay__list__selected'),
                 hasSelectedBank = (me.$el.find('.tpay__list-item--active').length === 1),
-                isSelectedMethod = !me.$el.parents('.method--bankdata').hasClass('is--hidden'),
                 isOk = false,
                 $button = $('.main--actions');
 
-            if(!isSelectedMethod) {
+            if(!tPayBankListActive) {
                 isOk = true
-            }else if(hasSelectedBank && isSelectedMethod) {
+            }else if(hasSelectedBank && tPayBankListActive) {
                 isOk = true;
             }
 
@@ -81,6 +87,27 @@
 
     $.subscribe('plugin/swShippingPayment/onInputChanged', function() {
         window.StateManager.addPlugin('*[data-tpay-bank="true"]', 'tpayBank');
-    })
+    });
+
+    $.subscribe('plugin/swShippingPayment/onInputChanged', function () {
+        var listTpay = $('.tpay__list__selected');
+
+        if(listTpay.length > 0) {
+            if(listTpay.find('.tpay__list-item--active').length > 0) {
+                dispatchScroll();
+            }
+        } else {
+            dispatchScroll();
+        }
+    });
+
+    function dispatchScroll() {
+        var $headline = $('.dispatch--method-headline');
+        if($headline.length > 0) {
+            $("html, body").animate({
+                scrollTop: $headline.offset().top-100
+            });
+        }
+    }
 
 })(jQuery, window);

@@ -22,7 +22,9 @@ use Shopware\Components\Plugin\Context\ActivateContext;
 use Shopware\Components\Plugin\Context\DeactivateContext;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\UninstallContext;
+use Shopware\Components\Plugin\Context\UpdateContext;
 use Shopware\Components\Plugin\PaymentInstaller;
+use Shopware\Components\Snippet\DatabaseHandler;
 use Shopware\Models\Payment\Payment;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use TpayShopwarePayments\Installer\PaymentsStruct;
@@ -41,6 +43,7 @@ class TpayShopwarePayments extends Plugin
     public function build(ContainerBuilder $container)
     {
         $container->setParameter('tpay_shopware_payments.view_dir', $this->getPath() . '/Resources/views/');
+        $container->setParameter('tpay_shopware_payments.snippets_dir', $this->getPath() . '/Resources/snippets/');
         parent::build($container);
     }
 
@@ -50,6 +53,7 @@ class TpayShopwarePayments extends Plugin
     public function install(InstallContext $context)
     {
         $this->createAttributes();
+        $this->loadSnippets();
         $this->createPayments($context);
     }
 
@@ -76,6 +80,12 @@ class TpayShopwarePayments extends Plugin
     {
         $this->setActiveFlag($context->getPlugin()->getPayments(), true);
         $context->scheduleClearCache(InstallContext::CACHE_LIST_ALL);
+    }
+
+    public function update(UpdateContext $context)
+    {
+        $this->loadSnippets();
+        $context->scheduleClearCache(UpdateContext::CACHE_LIST_ALL);
     }
 
     /**
@@ -173,5 +183,13 @@ class TpayShopwarePayments extends Plugin
         $service->update('s_order_attributes', 'tpay_bank_logo', TypeMapping::TYPE_STRING, [
             'custom' => false,
         ]);
+    }
+
+    private function loadSnippets()
+    {
+        /** @var DatabaseHandler $databaseLoader */
+        $databaseLoader = $this->container->get('shopware.snippet_database_handler');
+        $dir = $this->container->getParameter('tpay_shopware_payments.snippets_dir');
+        $databaseLoader->loadToDatabase($dir, false);
     }
 }

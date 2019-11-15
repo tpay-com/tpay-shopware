@@ -31,39 +31,39 @@
                 <div class="blikmodal__loader">
                     <div class="blikmodal__loader-animation"></div>
                     <img class="blikmodal__loader-img"
-                         src="{link file="custom/plugins/TpayShopwarePayments/Resources/views/_public/img/blik.png"}"
+                         src="https://secure.tpay.com/_/g/150.png"
                          alt="Blik">
                 </div>
                 <div class="blikmodal__text">
-                    <p class="blikmodal__text-confirm">{s name="blikConfirmBank"}Potwierdź płatność w alikacji mobilnej swojego Banku{/s}</p>
-                    <p class="blikmodal__text-wait is--hidden">{s name="blikWaiting"}Oczekiwanie na odpowiedź Banku{/s}</p>
+                    <p class="blikmodal__text-confirm">{s name="BlikConfirmBank" namespace="frontend/plugins/tpay"}{/s}</p>
+                    <p class="blikmodal__text-wait is--hidden">{s name="BlikWaiting" namespace="frontend/plugins/tpay"}{/s}</p>
                     <div class="blikmodal__text-error is--hidden">
-                        <p>{s name="blikError"}Wystąpił błąd. Proszę spróbować ponownie lub wybrać inną metodę płatności.{/s}</p>
-                        <button class="btn is--primary">{s name="blikErrorClouse"}Zamknij{/s}</button>
+                        <p>{s name="BlikError" namespace="frontend/plugins/tpay"}{/s}</p>
+                        <button class="btn is--primary">{s name="BlikErrorClose" namespace="frontend/plugins/tpay"}{/s}</button>
                     </div>
-                    <p class="blikmodal__text-success is--hidden">{s name="blikSuccess"}Sukces! Poczekaj na przekierowanie.{/s}</p>
+                    <p class="blikmodal__text-success is--hidden">{s name="BlikSuccess" namespace="frontend/plugins/tpay"}{/s}</p>
                 </div>
             </div>
         </div>
         <div class="blik" data-blik="true" data-url="{url controller='TpayPaymentBlik' action='ajax'}" data-check="{url controller='TpayPaymentBlik' action='check'}">
             <div class="blik__text">
-                <label for="blik" class="blik__text-label">{s name="typeBlikLabel"}Wprowadź kod Blik:{/s}</label>
+                <label for="blik" class="blik__text-label">{s name="BlikLabel" namespace="frontend/plugins/tpay"}{/s}</label>
                 <img class="blik__text-img"
-                     src="{link file="custom/plugins/TpayShopwarePayments/Resources/views/_public/img/blik.png"}"
+                     src="https://secure.tpay.com/_/g/150.png"
                      alt="Blik">
             </div>
             <input id="blik" type="text" class="blik__input"
-                   placeholder="{s name="typeBlikPlaceholder"}Wpisz 6-cyfrowy kod Blik{/s}">
+                   placeholder="{s name="BlikPlaceholder" namespace="frontend/plugins/tpay"}{/s}">
             <button type="submit" class="btn is--primary is--large right is--icon-right blik__button"
                     form="confirm--form" data-preloader-button="true">
                 {s name='ConfirmActionSubmit'}{/s}<i class="icon--arrow-right"></i>
             </button>
         </div>
     {elseif $sPayment.isTpayBankTransfer && $tpayBank.status === false}
-        {s name="TpayBankInvalid" assign="snippet"}Wybrany przez Ciebie bank jest aktualnie niedostępny. Proszę wybrać inny bank lub inną metodę płatności.{/s}
+        {s name="TpayBankInvalid" namespace="frontend/plugins/tpay" assign="snippet"}{/s}
         {include file="frontend/_includes/messages.tpl" type="error" content=$snippet icon="icon--cc-nc"}
         <a href="{url controller="checkout" action="shippingPayment" sTarget="checkout"}" class="btn is--primary is--small btn--change-payment">
-            {s name="TpayBankInvalidButton"}Wybierz{/s}
+            {s name="TpayBankInvalidButton" namespace="frontend/plugins/tpay"}{/s}
         </a>
     {else}
         {$smarty.block.parent}
@@ -73,18 +73,19 @@
 
 {* Terms of service *}
 {block name='frontend_checkout_confirm_agb'}
-    {if $sPayment.isTpayBlik || $sPayment.isTpayBankTransfer}
+    {if $sPayment.isTpayBlik || $sPayment.isTpayCard || $sPayment.isTpayBankTransfer}
+        {block name='frontend_checkout_confirm_agb_tpay'}
         <li class="block-group row--tos">
             <span class="block column--checkbox">
                 <input type="checkbox" required="required" aria-required="true"
-                       id="tpayTOS" name="tpayTOS" value="1" data-invalid-tos-jump="true"/>
+                       id="tpayTOS" name="tpayTOS" value="1" data-invalid-tos-jump="true" {if $sPayment.isTpayCard || $sPayment.isTpayBankTransfer}form="confirm--form"{/if}/>
             </span>
 
             <span class="block column--label">
-                <label for="tpayTOS" class="tpay__tos--label">{s name="ConfirmTpayTerms"}Akceptuję <a href="https://secure.tpay.com/regulamin.pdf" target="_blank">Regulamin</a> serwisu Tpay{/s}</label>
+                <label for="tpayTOS" class="tpay__tos--label">{s name="ConfirmTpayTerms" namespace="frontend/plugins/tpay"}{/s}</label>
             </span>
         </li>
+        {/block}
     {/if}
     {$smarty.block.parent}
 {/block}
-{* https://secure.tpay.com/regulamin.pdf *}

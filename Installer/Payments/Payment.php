@@ -242,14 +242,4 @@ abstract class Payment implements \JsonSerializable
 
         return array_filter($vars);
     }
-
-    /**
-     * @param string $iconName
-     *
-     * @return string
-     */
-    protected function getIconPath(string $iconName): string
-    {
-        return '{link file="custom/plugins/TpayShopwarePayments/Resources/views/_public/img/' . $iconName . '.png"}';
-    }
 }

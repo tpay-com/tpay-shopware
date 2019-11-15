@@ -72,14 +72,14 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
             ->execute()
             ->fetch();
 
-        if ($query['cleared'] == Status::PAYMENT_STATE_COMPLETELY_PAID) {
+        if ((int) $query['cleared'] === Status::PAYMENT_STATE_COMPLETELY_PAID) {
             $url = $this->buildURL(['controller' => 'checkout', 'action' => 'finish', 'sUniqueID' => $query['temporaryID']]);
             $data = [
                 'waiting' => false,
                 'success' => true,
                 'redirect' => $url,
             ];
-        } elseif ($query['cleared'] == Status::PAYMENT_STATE_OPEN) {
+        } elseif ((int) $query['cleared'] === Status::PAYMENT_STATE_OPEN) {
             $data = [
                 'waiting' => true,
             ];
@@ -118,7 +118,7 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
 
         try {
             $responseBlik = $this->tpayApi->blik($tpayTransaction['title'], $blikCode);
-            if (isset($responseBlik['result']) && $responseBlik['result'] == 1) {
+            if (isset($responseBlik['result']) && (int) $responseBlik['result'] === 1) {
                 return true;
             }
         } catch (TException $e) {

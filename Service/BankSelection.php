@@ -140,8 +140,6 @@ class BankSelection implements BankSelectionInterface
      * For future use.
      *
      * @param int $orderID
-     *
-     * @return bool
      */
     public function saveInOrderDetails(int $orderID)
     {
@@ -154,8 +152,6 @@ class BankSelection implements BankSelectionInterface
             ], 's_order_attributes', $orderID);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-
-            return false;
         }
     }
 }

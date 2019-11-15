@@ -11,7 +11,9 @@
 
         <service class="TpayShopwarePayments\Subscriber\Frontend" id="tpay_shopware_payments.subscriber.frontend">
             <argument id="template" type="service"/>
+            <argument id="snippets" type="service"/>
             <argument type="string">%tpay_shopware_payments.view_dir%</argument>
+            <argument type="string">%tpay_shopware_payments.snippets_dir%</argument>
             <tag name="shopware.event_subscriber"/>
         </service>
 

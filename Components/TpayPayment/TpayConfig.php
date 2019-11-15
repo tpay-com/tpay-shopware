@@ -111,4 +111,12 @@ class TpayConfig implements TpayConfigInterface
     {
         return (int) $this->config['tpay_channels'];
     }
+
+    /**
+     * @return bool
+     */
+    public function isDirectRedirect()
+    {
+        return $this->config['tpay_redirect_directly_to_the_bank'];
+    }
 }

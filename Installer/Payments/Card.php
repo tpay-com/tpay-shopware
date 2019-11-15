@@ -27,9 +27,9 @@ class Card extends Payment
         $this->action = 'TpayPaymentCard';
         $this->active = 0;
         $this->position = 3;
-        $this->additionalDescription = '<img class="tpay__payment__icon" src="' . $this->getIconPath('card') . '"/>'
+        $this->additionalDescription = '<img class="tpay__payment__icon" src="https://secure.tpay.com/_/g/103.png"/>'
             . '<div class="tpay__payment__description">'
-            . '  Karta płatnicza / kredytowa'
+            . '  Payment / credit card'
             . '</div>';
     }
 }

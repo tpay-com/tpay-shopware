@@ -8,6 +8,7 @@
  *
  * @author Mateusz Flasiński
  * @author Piotr Jóźwiak
+ * @author Michał Bortkiewicz
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -85,6 +86,7 @@ class Checkout implements SubscriberInterface
 
         $sPayment['isTpayBlik'] = $this->paymentRecognition->isBlik($id);
         $sPayment['isTpayBankTransfer'] = $this->paymentRecognition->isBankTransfer($id);
+        $sPayment['isTpayCard'] = $this->paymentRecognition->isCard($id);
 
         $view->assign('sPayment', $sPayment);
 

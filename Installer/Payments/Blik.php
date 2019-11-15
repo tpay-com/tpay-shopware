@@ -27,7 +27,7 @@ class Blik extends Payment
         $this->action = 'TpayPaymentBlik';
         $this->active = 0;
         $this->position = 1;
-        $this->additionalDescription = '<img class="tpay__payment__icon" src="' . $this->getIconPath('blik') . '"/>'
+        $this->additionalDescription = '<img class="tpay__payment__icon" src="https://secure.tpay.com/_/g/150.png"/>'
             . '<div class="tpay__payment__description">'
             . '  Blik'
             . '</div>';

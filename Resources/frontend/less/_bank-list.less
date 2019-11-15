@@ -31,13 +31,21 @@
       cursor: pointer;
       &:hover{
         border: 1px solid @typy-hover-border-color;
+        filter: blur(0);
       }
       &--active{
         border: 1px solid @tpay-selected-border-color;
       }
       &--busy{
-        border: 1px solid @tpay-selected-border-color;
+        //border: 1px solid @tpay-selected-border-color;
         filter: blur(1px);
+      }
+
+      [type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
       }
     }
     &-img{
