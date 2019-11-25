@@ -1,0 +1,67 @@
+.blik {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-content: flex-end;
+
+  &__text {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    .unitize(margin-bottom, 10);
+
+    &-label {
+      color: #5F7285;
+      .unitize(font-size, 14);
+      .unitize(line-height, 23);
+      font-weight: bold;
+    }
+
+    &-img {
+      .unitize-max-width(55);
+      height: auto;
+    }
+  }
+
+  &__input {
+    .unitize(margin-bottom, 15);
+  }
+
+  &__button {
+
+  }
+}
+
+.blik {
+  input[type="text"] {
+    width: 100%;
+  }
+}
+
+@media screen and(min-width: @tabletViewportWidth) {
+  .blik {
+    &__text {
+      .unitize-width(372);
+    }
+  }
+
+  input[type="text"].blik__input {
+    .unitize-width(372);
+  }
+
+  .confirm--content {
+    .main--actions {
+      .btn {
+        &.blik__button {
+          width: auto;
+        }
+      }
+    }
+  }
+
+}

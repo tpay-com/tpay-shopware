@@ -7,7 +7,6 @@
             <label lang="de">Händler ID</label>
             <label lang="en">Merchant ID</label>
             <label lang="pl">Identyfikator sprzedawcy</label>
-            <value/>
         </element>
 
         <element required="true" type="password" scope="shop">
@@ -15,7 +14,6 @@
             <label lang="de">Händler Passwort</label>
             <label lang="en">Merchant secret</label>
             <label lang="pl">Kod bezpieczeństwa</label>
-            <value/>
         </element>
 
         <element required="true" type="text" scope="shop">
@@ -23,15 +21,12 @@
             <label lang="de">Transaktion API Schlüssel</label>
             <label lang="en">Transaction API key</label>
             <label lang="pl">Klucz API Transakcji</label>
-            <value/>
         </element>
 
         <element required="true" type="password" scope="shop">
             <name>tpay_merchant_tr_api_pass</name>
             <label lang="de">Transaktion API key passwort</label>
             <label lang="en">Transaction API key password</label>
-            <label lang="pl">Hasło klucza API Transakcji</label>
-            <value/>
         </element>
 
         <element type="boolean" required="false" scope="shop">
@@ -40,6 +35,54 @@
             <label lang="en">Send an email after order status change</label>
             <label lang="pl">Wyślij wiadomość o zmianie statusu zamówienia</label>
             <value>true</value>
+        </element>
+
+        <element type="select" required="false" scope="shop">
+            <name>tpay_channels</name>
+            <label lang="de">Verfügbare Zahlungskanäle</label>
+            <label lang="en">Available payment channels</label>
+            <label lang="pl">Dostępne kanały płatności</label>
+            <description lang="en">Show all available payment channel groups or download groups of payment channels
+                available only online - for payment channels from these groups, booking is done within a short time
+            </description>
+            <description lang="de">Alle verfügbaren Zahlungskanalgruppen anzeigen oder Gruppen von Zahlungskanälen
+                herunterladen, die nur online verfügbar sind - für Zahlungskanäle dieser Gruppen erfolgt die Buchung
+                innerhalb kurzer Zeit
+            </description>
+            <description lang="pl">Pokaż wszystkie dostępne kanały płatności lub pokaż kanały płatności dostępne tylko
+                online - w przypadku kanałów płatności online rezerwacja jest dokonywana bardzo szybko
+            </description>
+            <store>
+                <option>
+                    <value>1</value>
+                    <label lang="de">Nur online</label>
+                    <label lang="en">Online Only</label>
+                    <label lang="pl">Tylko Online</label>
+                </option>
+                <option>
+                    <value>0</value>
+                    <label lang="de">Alle</label>
+                    <label lang="en">All</label>
+                    <label lang="pl">Wszystkie</label>
+                </option>
+            </store>
+        </element>
+
+        <element type="boolean" required="false" scope="shop">
+            <name>tpay_redirect_directly_to_the_bank</name>
+            <label lang="de">Leiten Sie direkt zum Panzertor</label>
+            <label lang="en">Redirect directly to the tank gate</label>
+            <label lang="pl">Przekieruj prosto do bramki baku</label>
+            <value>false</value>
+            <description lang="en">After choosing the payment by bank transfer, the customer goes straight to the bank's gate,
+                bypassing the tPay gateway. This may result in the unavailability of some specific methods such as PeoPay at Bank Pekao SA
+            </description>
+            <description lang="de">Nachdem der Kunde die Zahlung per Überweisung gewählt hat, geht er direkt zum Eingang der Bank und umgeht das tPay-Gateway.
+                Dies kann dazu führen, dass bestimmte Methoden wie PeoPay bei der Bank Pekao SA nicht verfügbar sind
+            </description>
+            <description lang="pl">Klient po wybraniu płatności przelewem trafia prosto do bramki banku z pominięciem bramki tPay.
+                Może to powodować niedostępność niektórych specyficznych metod jak np. PeoPay w Banku Pekao SA
+            </description>
         </element>
     </elements>
 </config>

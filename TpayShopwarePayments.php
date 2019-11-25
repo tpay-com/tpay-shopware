@@ -1,67 +1,60 @@
 <?php
+/**
+ * This file is part of the Tpay Shopware Plugin.
+ *
+ * @copyright 2019 Tpay Krajowy Integrator Płatności S.A.
+ * @link https://tpay.com/
+ * @support pt@tpay.com
+ *
+ * @author Mateusz Flasiński
+ * @author Piotr Jóźwiak
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TpayShopwarePayments;
 
+use Doctrine\ORM\PersistentCollection;
+use Shopware\Bundle\AttributeBundle\Service\TypeMapping;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\ActivateContext;
 use Shopware\Components\Plugin\Context\DeactivateContext;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\UninstallContext;
+use Shopware\Components\Plugin\Context\UpdateContext;
+use Shopware\Components\Plugin\PaymentInstaller;
+use Shopware\Components\Snippet\DatabaseHandler;
 use Shopware\Models\Payment\Payment;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use TpayShopwarePayments\Components\Installer\PluginInstaller;
+use TpayShopwarePayments\Installer\PaymentsStruct;
 
+/**
+ * Class TpayShopwarePayments
+ */
 class TpayShopwarePayments extends Plugin
 {
-    const PLUGIN_NAME = 'TpayShopwarePayments';
+    const BLIK = 150;
+    const CARD = 103;
 
-    const PLUGIN_VERSION = '1.0.0';
-
-    const LOCALE_AVAILABLE = ['en', 'pl'];
-
-    const DEFAULT_LOCALE = 'pl';
-
-    const PAYMENT_SHORT_NAME = 'tpay_shopware_payments';
-
-    const BLIK_PAYMENT_SHORT_NAME = 'tpay_blik_shopware_payments';
+    /**
+     * @param ContainerBuilder $container
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->setParameter('tpay_shopware_payments.view_dir', $this->getPath() . '/Resources/views/');
+        $container->setParameter('tpay_shopware_payments.snippets_dir', $this->getPath() . '/Resources/snippets/');
+        parent::build($container);
+    }
 
     /**
      * @param InstallContext $context
      */
     public function install(InstallContext $context)
     {
-        /** @var \Shopware\Components\Plugin\PaymentInstaller $installer */
-        $installer = $this->container->get('shopware.plugin_payment_installer');
-        $paymentMethods = [
-            [
-                'name' => static::PAYMENT_SHORT_NAME,
-                'description' => 'Tpay.com fast online payments',
-                'action' => 'TpayPayment',
-                'active' => 0,
-                'position' => 0,
-                'additionalDescription' =>
-                    '<img src="https://tpay.com/img/banners/tpay-160x75.svg"/>'.
-                    '<div id="payment_desc">'.
-                    'Pay save and secure by online bank transfers or international payment methods via Tpay.com system.'.
-                    '</div>',
-            ],
-            [
-                'name' => static::BLIK_PAYMENT_SHORT_NAME,
-                'description' => 'Fast BLIK payment by Tpay.com',
-                'action' => 'TpayPayment',
-                'active' => 0,
-                'position' => 0,
-                'additionalDescription' =>
-                    '<img src="https://secure.tpay.com/_/banks/b64.png"/>'.
-                    '<div id="payment_desc">'.
-                    'Pay by BLIK method via secure Tpay.com online payments system'.
-                    '</div>',
-            ],
-        ];
-        foreach ($paymentMethods as $paymentMethodDetails) {
-            $installer->createOrUpdate($context->getPlugin(), $paymentMethodDetails);
-        }
-        $this->installSchema();
-        $context->scheduleClearCache($context::CACHE_LIST_ALL);
+        $this->createAttributes();
+        $this->loadSnippets();
+        $this->createPayments($context);
     }
 
     /**
@@ -86,41 +79,117 @@ class TpayShopwarePayments extends Plugin
     public function activate(ActivateContext $context)
     {
         $this->setActiveFlag($context->getPlugin()->getPayments(), true);
+        $context->scheduleClearCache(InstallContext::CACHE_LIST_ALL);
     }
 
-    /**
-     * @param ContainerBuilder $containerBuilder
-     *
-     * @return void
-     */
-    public function build(ContainerBuilder $containerBuilder)
+    public function update(UpdateContext $context)
     {
-        $containerBuilder->setParameter('tpay_shopware.plugin_name', self::PLUGIN_NAME);
-        $containerBuilder->setParameter('tpay_shopware.plugin_version', self::PLUGIN_VERSION);
-        $containerBuilder->setParameter('tpay_shopware_payments.plugin_dir', $this->getPath());
-        $containerBuilder->setParameter('tpay_shopware_payments.template_dir', $this->getPath().'/Resources/views/');
-
-        parent::build($containerBuilder);
+        $this->loadSnippets();
+        $context->scheduleClearCache(UpdateContext::CACHE_LIST_ALL);
     }
 
     /**
-     * @param Payment[] $payments
-     * @param $active bool
+     * @param InstallContext $context
      */
-    private function setActiveFlag($payments, $active)
+    protected function createPayments(InstallContext $context)
+    {
+        $paymentsStruct = new PaymentsStruct();
+
+        /** @var PaymentInstaller $installer */
+        $installer = $this->container->get('shopware.plugin_payment_installer');
+
+        foreach ($paymentsStruct->getAll($context->getPlugin()->getId(), true) as $payment) {
+            $paymentInstance = $installer->createOrUpdate($context->getPlugin(), $payment);
+            $this->createRule($paymentInstance->getId());
+        }
+    }
+
+    /**
+     * Creates Shopware rules blocking payments if the currency is not PLN
+     *
+     * @param int $paymentID
+     */
+    private function createRule(int $paymentID)
+    {
+        $connection = $this->container->get('dbal_connection');
+
+        $old = $connection
+            ->createQueryBuilder()
+            ->select('id')
+            ->from('s_core_rulesets')
+            ->where('paymentID = :paymentID')
+            ->andWhere("rule1 LIKE 'CURRENCIESISOISNOT'")
+            ->andWhere("value1 LIKE 'PLN'")
+            ->setParameter('paymentID', $paymentID)
+            ->execute()
+            ->fetchColumn();
+
+        if (!empty($old)) {
+            return;
+        }
+
+        $qb = $connection->createQueryBuilder();
+
+        $data = [
+            'paymentID' => $paymentID,
+            'rule1' => $qb->expr()->literal('CURRENCIESISOISNOT'),
+            'value1' => $qb->expr()->literal('PLN'),
+        ];
+
+        $qb->insert('s_core_rulesets')
+            ->values($data)->execute();
+    }
+
+    /**
+     * @param PersistentCollection $payments
+     * @param bool                 $active
+     */
+    private function setActiveFlag(PersistentCollection $payments, bool $active)
     {
         $em = $this->container->get('models');
 
+        /** @var Payment $payment */
         foreach ($payments as $payment) {
             $payment->setActive($active);
         }
-        $em->flush();
+        try {
+            $em->flush();
+        } catch (\Exception $exception) {
+            $this->container->get('pluginlogger')->error('tPay installer error: ' . $exception->getMessage());
+        }
     }
 
-    private function installSchema()
+    /**
+     * @throws \Exception
+     */
+    private function createAttributes()
     {
-        $pluginInstaller = new PluginInstaller($this->container->get('models'));
-        $pluginInstaller->createOrUpdateSchema();
+        $service = $this->container->get('shopware_attribute.crud_service');
+        $service->update('s_user_attributes', 'tpay_bank_id', TypeMapping::TYPE_INTEGER, [
+            'custom' => false,
+        ]);
+        $service->update('s_user_attributes', 'tpay_bank_name', TypeMapping::TYPE_STRING, [
+            'custom' => false,
+        ]);
+        $service->update('s_user_attributes', 'tpay_bank_logo', TypeMapping::TYPE_STRING, [
+            'custom' => false,
+        ]);
+        $service->update('s_order_attributes', 'tpay_bank_id', TypeMapping::TYPE_INTEGER, [
+            'custom' => false,
+        ]);
+        $service->update('s_order_attributes', 'tpay_bank_name', TypeMapping::TYPE_STRING, [
+            'custom' => false,
+        ]);
+        $service->update('s_order_attributes', 'tpay_bank_logo', TypeMapping::TYPE_STRING, [
+            'custom' => false,
+        ]);
     }
 
+    private function loadSnippets()
+    {
+        /** @var DatabaseHandler $databaseLoader */
+        $databaseLoader = $this->container->get('shopware.snippet_database_handler');
+        $dir = $this->container->getParameter('tpay_shopware_payments.snippets_dir');
+        $databaseLoader->loadToDatabase($dir, false);
+    }
 }

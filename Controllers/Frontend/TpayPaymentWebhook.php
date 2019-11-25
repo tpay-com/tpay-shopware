@@ -1,33 +1,42 @@
 <?php
+/**
+ * This file is part of the Tpay Shopware Plugin.
+ *
+ * @copyright 2019 Tpay Krajowy Integrator Płatności S.A.
+ * @link https://tpay.com/
+ * @support pt@tpay.com
+ *
+ * @author Mateusz Flasiński
+ * @author Piotr Jóźwiak
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+use Shopware\Components\CSRFWhitelistAware;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Order\Status;
-use TpayShopwarePayments\Components\TpayPayment\TpayBasicNotificationHandler;
 use tpayLibs\src\_class_tpay\Utilities\TException;
-use Shopware\Components\CSRFWhitelistAware;
+use TpayShopwarePayments\Components\TpayPayment\TpayBasicNotificationHandler;
+use TpayShopwarePayments\Components\TpayPayment\TpayConfigInterface;
 
+/**
+ * Class Shopware_Controllers_Frontend_TpayPaymentWebhook
+ */
 class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controller_Action implements CSRFWhitelistAware
 {
-    const PLUGIN_NAME = 'TpayShopwarePayments';
-
-    /**
-     * @var TpayBasicNotificationHandler
-     */
+    /** @var TpayBasicNotificationHandler */
     protected $transactionNotification;
 
     /** @var \Psr\Log\LoggerInterface */
     protected $logger;
 
-    /**
-     * @var ModelManager
-     */
+    /** @var ModelManager */
     private $modelManager;
 
-    /**
-     * @var array
-     */
-    private $pluginConfig;
+    /** @var TpayConfigInterface */
+    private $config;
 
     /**
      * {@inheritdoc}
@@ -47,17 +56,17 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
         $this->modelManager = $this->container->get('models');
         $this->transactionNotification = $this->container->get('tpay_shopware_payments.transaction_notification');
         $this->logger = $this->container->get('tpaylogger');
-        $this->pluginConfig = $this->container
-            ->get('shopware.plugin.cached_config_reader')
-            ->getByPluginName(static::PLUGIN_NAME);
+        $this->config = $this->container->get('tpay_shopware_payments.components.tpay_payment.config');
     }
 
     /**
      * Check Tpay notification and update order payment status
+     *
      * @throws TException
      */
     public function notifyAction()
     {
+        $this->transactionNotification->enableForwardedIPValidation()->disableValidationServerIP(); //TODO Only for DEBUG
         $notification = $this->transactionNotification->checkPayment();
         /** @var Order $orderRepository */
         $orderRepository = $this->modelManager
@@ -73,13 +82,13 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
                 sprintf('Could not find associated order with the temporaryId %s', $notification['tr_crc'])
             );
         }
+
         $orderTotal = $orderRepository->getInvoiceAmount();
         $statusId = $this->getPaymentStatusId($notification, $orderTotal);
         /** @var Status $orderStatusModel */
         $comment = isset($notification['test_mode']) ? 'TEST MODE PAYMENT' : null;
-        $sendStatusMail = $this->pluginConfig['tpay_send_status_change_email'];
         $order = Shopware()->Modules()->Order();
-        $order->setPaymentStatus($orderRepository->getId(), $statusId, $sendStatusMail, $comment);
+        $order->setPaymentStatus($orderRepository->getId(), $statusId, $this->config->getSendStatusChangeEmail(), $comment);
         try {
             $this->modelManager->flush($orderRepository);
         } catch (\Exception $e) {
@@ -92,6 +101,7 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
     /**
      * @param array $notification
      * @param float $orderTotal
+     *
      * @return int
      */
     private function getPaymentStatusId($notification, $orderTotal)
@@ -111,5 +121,4 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
 
         return $status;
     }
-
 }

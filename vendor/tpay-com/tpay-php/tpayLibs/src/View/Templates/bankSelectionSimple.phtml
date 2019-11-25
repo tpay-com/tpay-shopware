@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="<?php echo $data['static_files_url'] ?>View/Styles/style.css"/>
 <div class="tpay-insidebg" id="main-payment">
     <div id="groups_v" class="tpay-panel-inside-content">
         <div id="bank-selection-form" class="tpay-groups-wrapper"></div>
@@ -70,7 +71,8 @@
     function getBankTile(groupId, groupName, logoSrc) {
         return '<div class="tpay-group-holder tpay-with-logo" id="bank-' + groupId + '" onclick="changeBank(' + groupId + ')">' +
             '<div class="tpay-group-name">' + groupName + '</div>' +
-            '<div class="tpay-group-logo-holder" style="background-image: url('+logoSrc+')">' +
+            '<div class="tpay-group-logo-holder">' +
+            '<img src="' + logoSrc + '" class="tpay-group-logo" alt="' + groupName + '">' +
             '</div></div></div>';
     }
 

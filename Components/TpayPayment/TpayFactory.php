@@ -1,6 +1,23 @@
 <?php
+/**
+ * This file is part of the Tpay Shopware Plugin.
+ *
+ * @copyright 2019 Tpay Krajowy Integrator Płatności S.A.
+ * @link https://tpay.com/
+ * @support pt@tpay.com
+ *
+ * @author Mateusz Flasiński
+ * @author Piotr Jóźwiak
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace TpayShopwarePayments\Components\TpayPayment;
 
+/**
+ * Class TpayFactory
+ */
 class TpayFactory
 {
     /** @var TpayConfigInterface $pluginConfig */
@@ -10,17 +27,20 @@ class TpayFactory
      * TpayFactory constructor.
      *
      * @param TpayConfigInterface $pluginConfig
-     * @param string $pluginDir
+     * @param string              $pluginDir
      */
     public function __construct(TpayConfigInterface $pluginConfig, $pluginDir)
     {
-        if (file_exists($pluginDir.'/vendor/autoload.php')) {
-            require_once $pluginDir.'/vendor/autoload.php';
+        if (file_exists($pluginDir . '/vendor/autoload.php')) {
+            require_once $pluginDir . '/vendor/autoload.php';
         }
         $this->pluginConfig = $pluginConfig;
     }
 
-    public function createBasicApi()
+    /**
+     * @return TpayBasicApi
+     */
+    public function createBasicApi(): TpayBasicApi
     {
         return new TpayBasicApi(
             $this->pluginConfig->getMerchantID(),
@@ -31,9 +51,9 @@ class TpayFactory
     }
 
     /**
-     * {@inheritDoc}
+     * @return TpayBasicForm
      */
-    public function createBasicForm()
+    public function createBasicForm(): TpayBasicForm
     {
         return new TpayBasicForm(
             $this->pluginConfig->getMerchantID(),
@@ -42,14 +62,13 @@ class TpayFactory
     }
 
     /**
-     * {@inheritDoc}
+     * @return TpayBasicNotificationHandler
      */
-    public function createTransactionNotificationHandler()
+    public function createTransactionNotificationHandler(): TpayBasicNotificationHandler
     {
         return new TpayBasicNotificationHandler(
             $this->pluginConfig->getMerchantID(),
             $this->pluginConfig->getMerchantSecret()
         );
     }
-
 }

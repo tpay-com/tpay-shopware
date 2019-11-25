@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+<services>
+    <service class="TpayShopwarePayments\Components\TpayPayment\TpayConfig" id="tpay_shopware_payments.components.tpay_payment.config">
+        <argument id="shopware.plugin.cached_config_reader" type="service"/>
+        <argument id="shopware_storefront.context_service" type="service"/>
+        <argument id="models" type="service"/>
+        <argument id="corelogger" type="service"/>
+        <argument type="string">%tpay_shopware_payments.plugin_name%</argument>
+    </service>
+
+    <service id="tpay_shopware_payments.factory" class="TpayShopwarePayments\Components\TpayPayment\TpayFactory">
+        <argument type="service" id="tpay_shopware_payments.components.tpay_payment.config"/>
+        <argument type="string">%tpay_shopware_payments.plugin_dir%</argument>
+    </service>
+    <service id="tpay_shopware_payments.basic_form" class="TpayShopwarePayments\Components\TpayPayment\TpayBasicForm">
+        <factory service="tpay_shopware_payments.factory" method="createBasicForm"/>
+    </service>
+    <service id="tpay_shopware_payments.transaction_notification" class="TpayShopwarePayments\Components\TpayPayment\TpayBasicNotificationHandler">
+        <factory service="tpay_shopware_payments.factory" method="createTransactionNotificationHandler"/>
+    </service>
+    <service id="tpay_shopware_payments.basic_api" class="TpayShopwarePayments\Components\TpayPayment\TpayBasicApi">
+        <factory service="tpay_shopware_payments.factory" method="createBasicApi"/>
+    </service>
+
+</services>
+</container>
