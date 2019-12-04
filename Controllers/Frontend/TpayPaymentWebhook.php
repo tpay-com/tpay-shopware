@@ -86,7 +86,7 @@ class Shopware_Controllers_Frontend_TpayPaymentWebhook extends Enlight_Controlle
         $orderTotal = $orderRepository->getInvoiceAmount();
         $statusId = $this->getPaymentStatusId($notification, $orderTotal);
         /** @var Status $orderStatusModel */
-        $comment = isset($notification['test_mode']) ? 'TEST MODE PAYMENT' : null;
+        $comment = isset($notification['test_mode']) && $notification['test_mode'] === 1 ? 'TEST MODE PAYMENT' : null;
         $order = Shopware()->Modules()->Order();
         $order->setPaymentStatus($orderRepository->getId(), $statusId, $this->config->getSendStatusChangeEmail(), $comment);
         try {
