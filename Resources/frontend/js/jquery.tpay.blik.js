@@ -41,7 +41,7 @@
                 me.enableBuyButton();
                 return;
             }
-            var code = me.$input.val();
+            var code = me.$input.val().replace(/\s/g,'');
 
             me.modal = $.modal.open($('#blikModal').html(), {closeOnOverlay: false, showCloseButton: false});
 
@@ -149,7 +149,7 @@
                 valid = false;
             }
 
-            if (me.isNumeric(value) && value.length === 6) {
+            if (me.testBlikCode(value)) {
                 me.$input.removeClass('has--error');
             } else {
                 me.$input.addClass('has--error');
@@ -160,9 +160,11 @@
 
         },
 
-        isNumeric: function (value) {
-            return !isNaN(parseFloat(value)) && isFinite(value);
+        testBlikCode: function (code) {
+          var pattern = new RegExp('^[0-9][0-9][0-9]+\\s[0-9][0-9][0-9]$');
+          return pattern.test(code)
         }
+
     });
 
     window.StateManager.addPlugin('*[data-blik="true"]', 'tpayBlik');

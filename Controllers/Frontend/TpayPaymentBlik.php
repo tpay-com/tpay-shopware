@@ -7,6 +7,7 @@
  * @support pt@tpay.com
  *
  * @author Mateusz Flasiński
+ * @author Michał Bortkiewicz
  * @author Piotr Jóźwiak
  *
  * For the full copyright and license information, please view the LICENSE
@@ -27,9 +28,13 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
     /** @var TpayBasicApi */
     protected $tpayApi;
 
+    /** @var Enlight_Components_Session_Namespace */
+    protected $session;
+
     public function preDispatch()
     {
         $this->tpayApi = $this->container->get('tpay_shopware_payments.basic_api');
+        $this->session = $this->container->get('session');
         parent::preDispatch();
     }
 
@@ -40,7 +45,7 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
     {
         $blikCode = $this->request->get('code');
 
-        $crc = $this->createPaymentUniqueId();
+        $crc = $this->session->offsetExists('tPayCrc') ? $this->session->offsetGet('tPayCrc') : $this->createPaymentUniqueId();
 
         $transactionConfig = $this->getTransactionConfig($crc, false);
 
@@ -52,6 +57,8 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
         }
 
         $this->insertOrder($this->transactionID, $crc);
+
+        $this->unsetTpaySession();
 
         $this->responseJSON(['success' => true, 'number' => $this->getOrderNumber()]);
     }
@@ -102,18 +109,23 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
      */
     private function createBlikTransaction(array $transactionConfig, string $blikCode): bool
     {
-        $transactionConfig['group'] = Plugin::BLIK;
-        try {
-            $tpayTransaction = $this->tpayApi->create($transactionConfig);
+        if($this->session->offsetExists('tPayTransaction')) {
+            $tpayTransaction = $this->session->offsetGet('tPayTransaction');
             $this->transactionID = $tpayTransaction['title'];
-        } catch (TException $TException) {
-            $this->logger->error($TException->getMessage());
 
-            return false;
-        } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
+        } else {
+            $transactionConfig['group'] = Plugin::BLIK;
+            try {
+                $tpayTransaction = $this->tpayApi->create($transactionConfig);
+                $this->transactionID = $tpayTransaction['title'];
 
-            return false;
+                $this->session->offsetSet('tPayTransaction', $tpayTransaction);
+                $this->session->offsetSet('tPayCrc', $transactionConfig['crc']);
+            } catch (Exception | TException $exception) {
+                $this->unsetTpaySession();
+                $this->logger->error($exception->getMessage());
+                return false;
+            }
         }
 
         try {
@@ -126,5 +138,16 @@ class Shopware_Controllers_Frontend_TpayPaymentBlik extends TpayPaymentControlle
         }
 
         return false;
+    }
+
+    private function unsetTpaySession(): void
+    {
+        if($this->session->offsetExists('tPayTransaction')) {
+            $this->session->offsetUnset('tPayTransaction');
+        }
+
+        if($this->session->offsetExists('tPayCrc')) {
+            $this->session->offsetUnset('tPayCrc');
+        }
     }
 }

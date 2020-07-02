@@ -5,7 +5,6 @@
 
         init: function () {
             var me = this;
-            // me.registerEvents();
             me.validateBlik();
         },
 

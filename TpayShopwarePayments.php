@@ -43,7 +43,7 @@ class TpayShopwarePayments extends Plugin
     public function build(ContainerBuilder $container)
     {
         $container->setParameter('tpay_shopware_payments.view_dir', $this->getPath() . '/Resources/views/');
-        $container->setParameter('tpay_shopware_payments.snippets_dir', $this->getPath() . '/Resources/snippets/');
+        $container->setParameter('tpay_shopware_payments.snippets_dir', $this->getSnippetDir());
         parent::build($container);
     }
 
@@ -189,7 +189,11 @@ class TpayShopwarePayments extends Plugin
     {
         /** @var DatabaseHandler $databaseLoader */
         $databaseLoader = $this->container->get('shopware.snippet_database_handler');
-        $dir = $this->container->getParameter('tpay_shopware_payments.snippets_dir');
-        $databaseLoader->loadToDatabase($dir, false);
+        $databaseLoader->loadToDatabase($this->getSnippetDir(), false);
+    }
+
+    private function getSnippetDir()
+    {
+        return $this->getPath() . '/Resources/snippets/';
     }
 }
